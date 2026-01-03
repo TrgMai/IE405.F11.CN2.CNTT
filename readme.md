@@ -286,3 +286,6 @@ hdfs dfs -chmod -R 777 /project/input/
 
 ```
 
+## 5. Streamlit
+
+**link project ** https://ie405f11cn2cntt.streamlit.app/
