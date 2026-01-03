@@ -22,7 +22,10 @@ else:
     # --- CẤU HÌNH CHO LINUX (STREAMLIT CLOUD) ---
     SPARK_PATH = None 
     JAVA_PATH = None
+    HADOOP_PATH = None
+    
     WINDOWS_IP = "127.0.0.1"
+    WSL_IP = "127.0.0.1"
     
     SPARK_MASTER = "local[*]"
-    HDFS_URL = None 
+    HDFS_URL = None
