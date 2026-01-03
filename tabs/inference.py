@@ -2,8 +2,9 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils import load_available_models, get_marketing_strategy
+from utils import load_available_models, get_marketing_strategy, load_model_smart
 from pyspark.ml import PipelineModel
+import traceback
 
 # --- CẤU HÌNH DỮ LIỆU ---
 DEFAULT_VALS = {
@@ -101,24 +102,21 @@ def show_page(spark):
         # --- B. XỬ LÝ VỚI SPINNER---
         with st.spinner("⏳ Đang tải model và phân tích dữ liệu... Vui lòng chờ..."):
             
-            # 1. Xác định đường dẫn
-            if "paths" in selected_meta and "hdfs" in selected_meta["paths"]:
-                model_path = selected_meta["paths"]["hdfs"]
-            else:
-                model_path = f"models/{selected_meta['name']}"
-
             try:
-                # 2. Load Model & Predict
-                loaded_model = PipelineModel.load(model_path)
+                loaded_model, source_type = load_model_smart(selected_meta['name'], selected_meta)
                 
+                print(f"✅ Loaded model successfully from: {source_type}")
+
+                # Chuẩn bị dữ liệu
                 data = [(cid, gender, age, income, score)]
                 cols = ["CustomerID", "Gender", "Age", "AnnualIncome", "SpendingScore"]
                 df_input = spark.createDataFrame(data, cols)
                 
+                # Dự đoán
                 pred = loaded_model.transform(df_input)
                 cluster = pred.select("prediction").collect()[0][0]
                 
-                # 3. Lấy chiến lược
+                # Lấy chiến lược
                 name, desc, action = get_marketing_strategy(income, score)
                 
                 # --- HIỂN THỊ KẾT QUẢ ---
@@ -160,4 +158,5 @@ def show_page(spark):
                     st.pyplot(fig)
 
             except Exception as e:
-                st.error(f"Lỗi hệ thống: {e}")
+                st.error(f"❌ Lỗi hệ thống: {e}")
+                traceback.print_exc()
