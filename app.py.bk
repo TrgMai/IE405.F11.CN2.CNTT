@@ -1,0 +1,65 @@
+import streamlit as st
+import os
+import sys
+import socketserver
+
+# --- 1. CONFIG & SETUP MÔI TRƯỜNG (PHẢI LÀM TRƯỚC TIÊN) ---
+# Fix lỗi socket cho Windows/WSL
+if not hasattr(socketserver, "UnixStreamServer"):
+    socketserver.UnixStreamServer = socketserver.TCPServer
+
+from config_ip import get_windows_ip
+
+# Định nghĩa đường dẫn
+SPARK_PATH = "C:/spark/spark-3.4.1-bin-hadoop3"
+JAVA_PATH = "C:/Progra~1/Java/jdk-11"
+HADOOP_PATH = "C:/spark/spark-3.4.1-bin-hadoop3/hadoop"
+WINDOWS_IP = get_windows_ip()
+
+# Thiết lập biến môi trường
+os.environ['SPARK_HOME'] = SPARK_PATH
+os.environ['JAVA_HOME'] = JAVA_PATH
+os.environ['HADOOP_HOME'] = HADOOP_PATH
+os.environ['PYSPARK_DRIVER_PYTHON'] = sys.executable
+os.environ['PYSPARK_PYTHON'] = '/usr/bin/python3.10'
+os.environ["HADOOP_USER_NAME"] = "ubt_trgmai"
+
+# Thêm Spark vào hệ thống path ĐỂ Python tìm thấy
+sys.path.insert(0, os.path.join(SPARK_PATH, "python"))
+sys.path.insert(0, os.path.join(SPARK_PATH, "python", "lib", "py4j-0.10.9.7-src.zip"))
+
+# --- 2. SAU KHI SETUP XONG MỚI IMPORT PYSPARK ---
+from pyspark.sql import SparkSession
+from pyspark.conf import SparkConf
+
+# --- 3. INIT SPARK ---
+@st.cache_resource
+def init_spark():
+    conf = SparkConf() \
+        .setAppName("Marketing_App_UI") \
+        .setMaster(f"spark://{WINDOWS_IP}:7077") \
+        .set("spark.driver.host", WINDOWS_IP) \
+        .set("spark.driver.bindAddress", WINDOWS_IP) \
+        .set("spark.executor.memory", "1g") \
+        .set("spark.cores.max", "2") \
+        .set("spark.rpc.message.maxSize", "1024") \
+        .set("spark.kryoserializer.buffer.max", "1024m")
+    return SparkSession.builder.config(conf=conf).getOrCreate()
+
+# --- 4. GIAO DIỆN STREAMLIT ---
+st.set_page_config(page_title="Big Data Marketing", layout="wide")
+
+st.title("🛍️ Hệ thống Phân nhóm Khách hàng")
+st.info(f"Driver IP: {WINDOWS_IP} | Worker: WSL")
+
+try:
+    spark = init_spark()
+    st.sidebar.success(f"Spark Connected! Ver: {spark.version}")
+except Exception as e:
+    st.error(f"Không thể kết nối Spark: {e}")
+    # In chi tiết lỗi ra terminal để debug
+    import traceback
+    traceback.print_exc()
+    st.stop()
+
+st.write("Vui lòng chọn chức năng ở thanh bên trái (Sidebar).")
