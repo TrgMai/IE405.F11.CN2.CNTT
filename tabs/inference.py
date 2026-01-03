@@ -26,16 +26,25 @@ def show_page(spark):
     models = load_available_models()
     if not models:
         st.warning("⚠️ Chưa có model nào. Vui lòng sang tab 'Huấn luyện' để tạo model.")
+        if st.button("🔄 Kiểm tra lại"):
+            st.rerun()
         return
 
-    col_sel, col_info = st.columns([3, 1])
-    with col_sel:
+    c_sel, c_info, c_btn = st.columns([3, 1.2, 1], vertical_alignment="bottom", gap="small")
+    
+    with c_sel:
         model_options = {f"{m['name']} (K={m['k']})": m for m in models}
         selected_option = st.selectbox("📂 Chọn Model:", list(model_options.keys()))
         selected_meta = model_options[selected_option]
-    with col_info:
-        st.write("")
-        st.caption(f"Nguồn: {selected_meta['source']}")
+        
+    with c_info:
+        st.caption("Nguồn dữ liệu:")
+        source_label = "☁️ HDFS" if "HDFS" in selected_meta['source'] else "💻 Local"
+        st.markdown(f"**{source_label}**")
+
+    with c_btn:
+        if st.button("🔄 Cập nhật Model", help="Cập nhật danh sách model mới nhất"):
+            st.rerun()
 
     st.divider()
 
