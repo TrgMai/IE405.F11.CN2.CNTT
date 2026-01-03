@@ -11,7 +11,7 @@ if IS_WINDOWS:
     JAVA_PATH = "C:/Progra~1/Java/jdk-11"
     HADOOP_PATH = "C:/spark/spark-3.4.1-bin-hadoop3/hadoop"
     
-    from config_ip import get_windows_ip, get_wsl_ip
+    from tools.config_ip import get_windows_ip, get_wsl_ip
     WINDOWS_IP = get_windows_ip()
     WSL_IP = get_wsl_ip()
     

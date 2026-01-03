@@ -9,13 +9,13 @@ from datetime import datetime
 
 # --- IMPORT CẤU HÌNH MÔI TRƯỜNG ---
 try:
-    from config_env import IS_WINDOWS
+    from tools.config_env import IS_WINDOWS
 except ImportError:
     import sys
     IS_WINDOWS = sys.platform.startswith('win')
 
 if IS_WINDOWS:
-    from config_ip import get_wsl_ip
+    from tools.config_ip import get_wsl_ip
 
 # --- 0. HELPER: TỰ ĐỘNG DÒ TÌM HDFS ---
 def detect_hdfs_path():

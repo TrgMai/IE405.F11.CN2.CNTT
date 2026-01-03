@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils import build_pipeline, save_model_hybrid, get_marketing_strategy
+from tools.utils import build_pipeline, save_model_hybrid, get_marketing_strategy
 
 def show_page(spark):
     st.subheader("🏋️ Huấn luyện Mô hình Mới (Analysis & Training)")

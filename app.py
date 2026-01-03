@@ -6,7 +6,7 @@ import socketserver
 if not hasattr(socketserver, "UnixStreamServer"):
     socketserver.UnixStreamServer = socketserver.TCPServer
 
-from config_env import IS_WINDOWS, SPARK_MASTER, WINDOWS_IP, SPARK_PATH, JAVA_PATH, HADOOP_PATH
+from tools.config_env import IS_WINDOWS, SPARK_MASTER, WINDOWS_IP, SPARK_PATH, JAVA_PATH, HADOOP_PATH
 
 if IS_WINDOWS:
     os.environ['SPARK_HOME'] = SPARK_PATH

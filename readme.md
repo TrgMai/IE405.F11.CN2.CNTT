@@ -1,7 +1,3 @@
-Dưới đây là tài liệu kỹ thuật đầy đủ, đã khôi phục toàn bộ các câu lệnh tải xuống (wget) và danh sách các đường dẫn quản lý (Web UI) theo đúng nội dung file gốc của bạn.
-
----
-
 # TÀI LIỆU KỸ THUẬT: TRIỂN KHAI HỆ THỐNG SPARK CLUSTER HYBRID & HDFS
 
 ## 1. TỔNG QUAN KIẾN TRÚC

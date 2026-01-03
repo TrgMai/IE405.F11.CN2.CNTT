@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pyspark.sql import SparkSession
-from utils import build_pipeline, save_model_hybrid, get_marketing_strategy
+from tools.utils import build_pipeline, save_model_hybrid, get_marketing_strategy
 
 st.header("🏋️ Huấn luyện Mô hình Mới")
 

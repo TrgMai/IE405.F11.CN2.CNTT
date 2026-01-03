@@ -1,5 +1,5 @@
 import streamlit as st
-from utils import load_available_models, get_marketing_strategy
+from tools.utils import load_available_models, get_marketing_strategy
 from pyspark.ml import PipelineModel
 from pyspark.sql import SparkSession
 
